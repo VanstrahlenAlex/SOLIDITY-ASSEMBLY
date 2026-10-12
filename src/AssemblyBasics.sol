@@ -244,6 +244,36 @@ contract AssemblyBasics {
 		}
 	}
 
+	// ================================================================
+	// SECTION 5: MEMORY OPERATIONS (mstore / mload)
+	// ================================================================
+	//
+	// Memory is a temporary byte array that exists only during a transaction.
+	// It's addressed by byte offset and reads/writes in 32-byte (256-bit) words.
+	//
+	// Layout convention:
+	//   0x00 - 0x3F: Scratch space (Solidity uses for hashing)
+	//   0x40 - 0x5F: Free memory pointer (points to next available slot)
+	//   0x60 - 0x7F: Zero slot
+	//   0x80+:       Free memory (where Solidity allocates)
+	//
+
+	function writeToMemory(uint256 offset, uint256 value) external pure returns (uint256 result) {
+		assembly {
+			mstore(offset, value)
+
+			result := mload(offset)
+		}
+	}
+
+	function readFromMemory(uint256 offset) external pure returns (uint256 result) {
+		assembly {
+			result := mload(offset)
+		}
+	}
+
+	
+
 	///=========== 
 	/// End
 	///=========== 
