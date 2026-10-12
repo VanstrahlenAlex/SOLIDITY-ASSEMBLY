@@ -57,6 +57,26 @@ contract AssemblyUtils {
 		}
 	}
 
+	// ================================================================
+	// SECTION 2: EFFICIENT HASHING
+	// ================================================================
+
+	/// @notice Hash bytes data using keccak256 in assembly
+	/// @dev `keccak256(offset, size)` hashes `size` bytes starting at `offset` in memory.
+	///
+	/// In Solidity: `keccak256(abi.encodePacked(data))` first copies data to memory,
+	/// then hashes. In assembly, if data is already in memory (like calldata),
+	/// we can hash it directly, saving gas on the copy step.
+	///
+	/// Here we hash two uint256 values packed together (64 bytes total).
+	function efficientHash(uint256 a, uint256 b) external pure returns (bytes32 result) {
+		assembly {
+			// Use scratch space (0x00-0x3F) for hashing - Solidity reserves this area
+			mstore(0x00, a)    // Store `a` at memory position 0x00 (32 bytes)
+			mstore(0x20, b)    // Store `b` at memory position 0x20 (32 bytes)
+			result := keccak256(0x00, 0x40) // Hash 64 bytes starting at 0x00
+		}
+	}
 
 	
 }
