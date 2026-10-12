@@ -52,4 +52,52 @@ contract AssemblyBasics {
 			result := sload(slot)
 		}
 	}
+
+
+	//================================================================
+	//SECTION 2: ARITHMETIC - Math Operations
+	//================================================================
+	//
+	// These opcodes operate on 256-bit unsigned integers.
+	// IMPORTANT: Unlike Solidity 0.8+, assembly arithmetic does NOT
+	// revert on overflow! It wraps around silently (modular aritmetic).abi
+
+	function assemblyAdd(uint256 a, uint256 b) external pure returns (uint256 result) {
+		assembly {
+			result := add(a, b)
+		}
+	}
+
+	function assemblySub(uint256 a, uint256 b) external pure returns (uint256 result) {
+		assembly {
+			result := sub(a, b)
+		}
+	}
+
+	function assemblyMul(uint256 a, uint256 b) external pure returns (uint256 result) {
+		assembly {
+			result := mul(a, b)
+		}
+	}
+
+	function assemblyDiv(uint256 a, uint256 b) external pure returns (uint256 result) {
+		assembly {
+			result := div(a, b)
+		}
+	}
+
+	function assemblyMod(uint256 a, uint256 b) external pure returns (uint256 result) {
+		assembly {
+			result := mod(a, b)
+		}
+	}
+
+
+
+
+
+
+	///===========
+	/// End
+	///===========
 }
