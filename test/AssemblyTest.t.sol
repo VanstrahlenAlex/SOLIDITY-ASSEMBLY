@@ -45,4 +45,32 @@ contract AssemblyTest is Test {
 		basics.store(5, 999);
 		assertEq(basics.load(5), 999, "value does not match");
 	}
+
+
+	// ====================================================================
+	// SECTION 2: Math Operations (+, -, *, /, %, <<, >>)
+	// ====================================================================
+
+	function test_addSubMul() public view {
+		assertEq(basics.assemblyAdd(10, 20), 30, "Error");
+		assertEq(basics.assemblySub(30, 20), 10, "Error");
+		assertEq(basics.assemblyMul(6, 7), 42, "Error");
+	}
+
+	function test_divAndMod() public view {
+		assertEq(basics.assemblyDiv(10, 20), 30, "Error");
+		assertEq(basics.assemblyMod(30, 20), 10, "Error");
+
+		assertEq(basics.assemblyDiv(100, 0), 0, "Division by zero returns 0");
+		assertEq(basics.assemblyMod(100, 0), 0, "Modulo by zero returns 0");
+	}
+
+	function test_arithmeticWithZero() public view{
+		assertEq(basics.assemblyAdd(0, 0), 0, "Addition of zero returns zero");
+		assertEq(basics.assemblySub(0, 0), 0, "Subtraction of zero returns zero");
+		assertEq(basics.assemblyMul(0, 0), 0, "Multiplication of zero returns zero");
+		assertEq(basics.assemblyDiv(0, 0), 0, "Division of zero returns zero");
+		assertEq(basics.assemblyMod(0, 0), 0, "Modulo of zero returns zero");
+	}
+
 }
