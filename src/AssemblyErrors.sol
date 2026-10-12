@@ -61,4 +61,67 @@ contract AssemblyErrors {
 		}
 	}
 
+	// ================================================================
+	// SECTION 2: REQUIRE PATTERN IN ASSEMBLY
+	// ================================================================
+
+	/// @notice Require a condition to be true, revert with custom error if not
+	/// @dev The `if iszero(condition) { revert(...) }` pattern is how
+	/// Solidity's `require()` works under the hood.
+	///
+	/// Custom error encoding is simpler and cheaper than Error(string):
+	///    Just the 4-byte selector, no string data needed.
+	function requireInAssembly(bool condition) external pure {
+		assembly {
+			// If condition is false (iszero returns 1)...
+			if iszero(condition) {
+				// Store ConditionFailed() selector
+				mstore(0x00, 0x0b1ad13b00000000000000000000000000000000000000000000000000000000)
+				// Revert with just 4 bytes (the selector)
+				revert(0x00, 0x04)
+			}
+		}
+	}
+
+	// ================================================================
+	// SECTION 3: SAFE MATH IN ASSEMBLY
+	// ================================================================
+	//
+	// Solidity 0.8+ has built-in overflow checks, but they add gas cost.
+	// In assembly, you can write your own checks that are sometimes cheaper,
+	// especially if you can skip checks you know are unnecessary.
+	//
+
+	/// @notice Safe addition with overflow check
+	/// @dev How to detect overflow: if a + b < a, it overflowed.
+	/// In assembly: add(a, b) wraps on overflow, so if result < a, it wrapped.
+	function safeAdd(uint256 a, uint256 b) external pure returns (uint256 result) {
+		assembly {
+			result := add(a, b)
+			// If result < a, overflow occurred (b was positive but result wrapped)
+			if lt(result, a) {
+				// Store Overflow() selector and revert
+				mstore(0x00, 0x35278d1200000000000000000000000000000000000000000000000000000000)
+				revert(0x00, 0x04)
+			}
+		}
+	}
+
+	/// @notice Safe multiplication with overflow check
+	/// @dev How to detect overflow: if a != 0 and a * b / a != b, it overflowed.
+	/// Special case: if a == 0, result is 0 (no overflow possible).
+	function safeMul(uint256 a, uint256 b) external pure returns (uint256 result) {
+		assembly {
+			result := mul(a, b)
+			// Check: if a != 0 AND result / a != b, then overflow
+			if and(
+				iszero(iszero(a)),          // a != 0
+				iszero(eq(div(result, a), b)) // result / a != b
+			) {
+				mstore(0x00, 0x35278d1200000000000000000000000000000000000000000000000000000000)
+				revert(0x00, 0x04)
+			}
+		}
+	}
+
 }
