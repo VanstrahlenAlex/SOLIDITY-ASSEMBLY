@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.26;
+pragma solidity ^0.8.35;
 
 /// @title AssemblyUtils - Practical Assembly Patterns
 /// @author Alexander Van strahlen
@@ -78,5 +78,5 @@ contract AssemblyUtils {
 		}
 	}
 
-	
+
 }
