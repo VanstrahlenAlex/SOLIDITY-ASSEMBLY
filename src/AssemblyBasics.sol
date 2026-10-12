@@ -211,6 +211,39 @@ contract AssemblyBasics {
 		}
 	}
 
+
+
+	// ================================================================
+	// SECTION 4: COMPARISON OPERATIONS
+	// ================================================================
+	//
+	// Comparisons return 1 (true) or 0 (false) as uint256.
+	//
+
+	function isZero(uint256 value) external pure returns (bool result) {
+		assembly {
+			result := iszero(value)
+		}
+	}
+
+	function lessThan(uint256 a, uint256 b) external pure returns (bool result) {
+		assembly {
+			result := lt(a, b)
+		}
+	}
+
+	function greaterThan(uint256 a, uint256 b) external pure returns (bool result) {
+		assembly {
+			result := gt(a, b)
+		}
+	}
+
+	function equalTo(uint256 a, uint256 b) external pure returns (bool result) {
+		assembly {
+			result := eq(a, b)
+		}
+	}
+
 	///=========== 
 	/// End
 	///=========== 
